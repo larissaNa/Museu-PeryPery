@@ -8,9 +8,8 @@ interface PublicRouteProps {
 }
 
 export const PublicRoute = ({ children }: PublicRouteProps) => {
-  const { user, loading } = useAuthContext();
+  const { loading } = useAuthContext();
 
   if (loading) return <div>Carregando...</div>;
-  if (user) return <Navigate to="/dashboard" replace />;
   return children;
 };

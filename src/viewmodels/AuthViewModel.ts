@@ -1,42 +1,39 @@
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../services/firebaseService';
-import { authService } from '../services/firebaseAuth';
-import type { User } from '../types/AuthTypes';
+import { useState, useEffect, useMemo } from 'react';
+import { AuthService } from '../services/AuthService';
+import { AuthRepository } from '../models/repositories/AuthRepository';
+import type { User } from '../models/entities/User';
 
-export const useAuth = () => {
+export const useAuthViewModel = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Inicializar serviços (usando useMemo para evitar recriação)
+  const authService = useMemo(() => {
+    const authRepository = new AuthRepository();
+    return new AuthService(authRepository);
+  }, []);
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        try {
-          const user = authService.formatUser(firebaseUser);
-          setUser({
-            ...user,
-          });
-        } catch (error) {
-          console.error('Error fetching user role:', error);
-          setUser(authService.formatUser(firebaseUser));
-        }
-      } else {
-        setUser(null);
-      }
+    const unsubscribe = authService.onAuthStateChanged((user) => {
+      setUser(user);
       setLoading(false);
     });
 
     return unsubscribe;
-  }, []);
+  }, [authService]);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
       const user = await authService.signIn(email, password);
+      // O onAuthStateChanged vai atualizar o user automaticamente
+      // mas setamos aqui também para garantir
       setUser(user);
-      return user;
-    } catch (error) {
       setLoading(false);
+      return user;
+    } catch (error: any) {
+      setLoading(false);
+      console.error("Erro no ViewModel signIn:", error);
       throw error;
     }
   };
@@ -46,8 +43,9 @@ export const useAuth = () => {
     try {
       const user = await authService.signUp(email, password, displayName);
       setUser(user);
+      setLoading(false);
       return user;
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
       throw error;
     }
@@ -58,7 +56,7 @@ export const useAuth = () => {
     try {
       await authService.signOut();
       setUser(null);
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     } finally {
       setLoading(false);
@@ -73,3 +71,4 @@ export const useAuth = () => {
     signOut
   };
 };
+

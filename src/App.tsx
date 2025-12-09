@@ -1,58 +1,40 @@
-// App.tsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { Login } from "./pages/Login";
-import { Register } from "./pages/Register";
-import { Dashboard } from "./pages/Dashboard";
-import { PrivateRoute } from "./routes/PrivateRoute";
+import Dashboard from "./pages/Dashboard";
+import { Auth } from "./pages/Auth";
+import NotFound from "./pages/NotFound";
 import { PublicRoute } from "./routes/PublicRoute";
 
-function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Rotas públicas */}
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login onToggleMode={() => (window.location.href = "/register")} />
-               </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <Register onToggleMode={() => (window.location.href = "/login")} />
-               </PublicRoute>
-            }
-          />
+const queryClient = new QueryClient();
 
-          {/* Rota protegida */}
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-               </PrivateRoute>
-            }
-          />
-
-          {/* Redireciona raiz → dashboard/login */}
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-               </PrivateRoute>
-            }
-          />
-        </Routes>
-      </Router>
-    </AuthProvider>
-  );
-}
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route 
+              path="/login" 
+              element={
+                <PublicRoute>
+                  <Auth />
+                </PublicRoute>
+              } 
+            />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
