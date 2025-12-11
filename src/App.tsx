@@ -9,6 +9,10 @@ import { Auth } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { PublicRoute } from "./routes/PublicRoute";
 
+// ✅ ADIÇÕES
+import AdminRoute from "./routes/AdminRoute";
+import AdminPage from "./pages/AdminPage";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -28,6 +32,17 @@ const App = () => (
                 </PublicRoute>
               } 
             />
+
+            {/* ✅ ROTA DE ADMIN */}
+            <Route 
+              path="/admin" 
+              element={
+                <AdminRoute>
+                  <AdminPage />
+                </AdminRoute>
+              } 
+            />
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

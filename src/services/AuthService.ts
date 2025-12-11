@@ -1,6 +1,8 @@
 import { AuthRepository } from '../models/repositories/AuthRepository';
 import { User } from '../models/entities/User';
 import { User as FirebaseUser } from 'firebase/auth';
+import { createUserDoc } from '../services/RoleService';
+
 
 export class AuthService {
   constructor(private authRepository: AuthRepository) {}
@@ -49,26 +51,29 @@ export class AuthService {
   }
 
   async signUp(email: string, password: string, displayName?: string): Promise<User> {
-    if (!email || !password) {
-      throw new Error('Email e senha são obrigatórios');
-    }
-
-    if (password.length < 6) {
-      throw new Error('A senha deve ter pelo menos 6 caracteres');
-    }
-
-    try {
-      const firebaseUser = await this.authRepository.signUp(email, password);
-      
-      if (displayName) {
-        await this.authRepository.updateUserProfile(firebaseUser, displayName);
-      }
-
-      return this.formatUser(firebaseUser);
-    } catch (error: any) {
-      throw new Error(this.translateError(error));
-    }
+  if (!email || !password) {
+    throw new Error('Email e senha são obrigatórios');
   }
+
+  if (password.length < 6) {
+    throw new Error('A senha deve ter pelo menos 6 caracteres');
+  }
+
+  try {
+    const firebaseUser = await this.authRepository.signUp(email, password);
+
+    if (displayName) {
+      await this.authRepository.updateUserProfile(firebaseUser, displayName);
+    }
+
+    // ✅ AQUI cria o doc no Firestore
+    await createUserDoc(firebaseUser.uid);
+
+    return this.formatUser(firebaseUser);
+  } catch (error: any) {
+    throw new Error(this.translateError(error));
+  }
+}
 
   async signOut(): Promise<void> {
     await this.authRepository.signOut();
