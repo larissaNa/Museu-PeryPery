@@ -15,18 +15,47 @@ export class AuthService {
   }
 
   private translateError(error: any): string {
-    // Supabase returns 'message' in the error object
-    const errorMessage = error?.message || '';
-    
-    // Map common Supabase error messages to Portuguese
-    const errorMessages: Record<string, string> = {
+    console.log('AuthService translateError - Error object:', JSON.stringify(error, null, 2));
+    console.log('AuthService translateError - Code:', error?.code);
+    console.log('AuthService translateError - Message:', error?.message);
+
+    const code = error?.code as string | undefined;
+    const message = error?.message as string | undefined;
+
+    const codeMessages: Record<string, string> = {
+      invalid_credentials: 'Email ou senha incorretos',
+      invalid_email: 'Email inválido',
+      email_not_confirmed: 'Por favor, confirme seu email antes de fazer login',
+      user_already_exists: 'Este email já está cadastrado',
+      weak_password: 'A senha deve ter pelo menos 6 caracteres',
+      over_email_send_rate_limit: 'Muitas tentativas. Tente novamente em alguns minutos.',
+    };
+
+    if (code && codeMessages[code]) {
+      return codeMessages[code];
+    }
+
+    const messageMessages: Record<string, string> = {
       'Invalid login credentials': 'Email ou senha incorretos',
       'User already registered': 'Este email já está cadastrado',
       'Password should be at least 6 characters': 'A senha deve ter pelo menos 6 caracteres',
       'Email not confirmed': 'Por favor, confirme seu email antes de fazer login',
+      'Invalid email': 'Email inválido',
     };
 
-    return errorMessages[errorMessage] || errorMessage || 'Ocorreu um erro inesperado';
+    if (message && messageMessages[message]) {
+      return messageMessages[message];
+    }
+
+    if (error?.status === 400 && message?.toLowerCase().includes('email')) {
+      return 'Email inválido';
+    }
+
+    if (error?.status === 400 && message?.toLowerCase().includes('password')) {
+      return 'Senha inválida';
+    }
+
+    return message || 'Ocorreu um erro inesperado. Tente novamente.';
   }
 
   async signIn(email: string, password: string): Promise<User> {

@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logoPreta from "../assets/logopreta.png";
+import { useToast } from "@/hooks/use-toast";
 
 interface RegisterProps {
   onToggleMode: () => void;
 }
 
 export const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
-  const { signUp, loading } = useAuthContext();
+  const { signUp, loading, user } = useAuthContext();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,10 +29,14 @@ export const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
 
     try {
       await signUp(email, password, name);
-      navigate("/");
     } catch (err: any) {
       const errorMessage = err.message || "Erro ao cadastrar usuário";
       setError(errorMessage);
+      toast({
+        title: "Erro no cadastro",
+        description: errorMessage,
+        variant: "destructive",
+      });
     }
   };
 

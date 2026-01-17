@@ -4,12 +4,13 @@ import { Navigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 
 interface PublicRouteProps {
-  children: ReactElement; // ✅ usa tipo do React, não do JSX global
+  children: ReactElement;
 }
 
 export const PublicRoute = ({ children }: PublicRouteProps) => {
-  const { loading } = useAuthContext();
+  const { user, loading } = useAuthContext();
 
   if (loading) return <div>Carregando...</div>;
+  if (user) return <Navigate to="/" replace />;
   return children;
 };
