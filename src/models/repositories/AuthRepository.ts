@@ -1,43 +1,71 @@
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged,
-  updateProfile,
-  User as FirebaseUser
-} from 'firebase/auth';
-import { auth } from '../../infra/firebaseService';
+import { User } from '@supabase/supabase-js';
+import { supabase } from '../../infra/supabaseClient';
 
 export class AuthRepository {
-  async signIn(email: string, password: string): Promise<FirebaseUser> {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return userCredential.user;
-    } catch (error: any) {
+  async signIn(email: string, password: string): Promise<User> {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
       console.error("Erro no AuthRepository signIn:", error);
+      throw error;
+    }
+
+    if (!data.user) {
+      throw new Error("Usuário não encontrado após login");
+    }
+
+    return data.user;
+  }
+
+  async signUp(email: string, password: string): Promise<User> {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data.user) {
+      throw new Error("Falha ao criar usuário");
+    }
+
+    return data.user;
+  }
+
+  async updateUserProfile(user: User, displayName: string): Promise<void> {
+    const { error } = await supabase.auth.updateUser({
+      data: { display_name: displayName }
+    });
+
+    if (error) {
       throw error;
     }
   }
 
-  async signUp(email: string, password: string): Promise<FirebaseUser> {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
-  }
-
-  async updateUserProfile(user: FirebaseUser, displayName: string): Promise<void> {
-    await updateProfile(user, { displayName });
-  }
-
   async signOut(): Promise<void> {
-    await firebaseSignOut(auth);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      throw error;
+    }
   }
 
-  onAuthStateChanged(callback: (user: FirebaseUser | null) => void): () => void {
-    return onAuthStateChanged(auth, callback);
+  onAuthStateChanged(callback: (user: User | null) => void): () => void {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      callback(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }
 
-  getCurrentUser(): FirebaseUser | null {
-    return auth.currentUser;
+  async getCurrentUser(): Promise<User | null> {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
   }
 }
-

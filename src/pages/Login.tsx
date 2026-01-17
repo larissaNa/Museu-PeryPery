@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logoPreta from "../assets/logopreta.png";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoginProps {
   onToggleMode: () => void;
 }
 
 export const Login: React.FC<LoginProps> = ({ onToggleMode }) => {
-  const { signIn, loading } = useAuthContext();
+  const { signIn, loading, user } = useAuthContext();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,16 +28,25 @@ export const Login: React.FC<LoginProps> = ({ onToggleMode }) => {
 
     if (!email || !password) {
       setError("Por favor, preencha todos os campos");
+      toast({
+        title: "Erro no login",
+        description: "Por favor, preencha todos os campos",
+        variant: "destructive",
+      });
       return;
     }
 
     try {
       await signIn(email, password);
-      navigate("/");
     } catch (err: any) {
       console.error("Erro no login:", err);
       const errorMessage = err?.message || "Email ou senha inválidos";
       setError(errorMessage);
+      toast({
+        title: "Erro no login",
+        description: errorMessage,
+        variant: "destructive",
+      });
     }
   };
 
