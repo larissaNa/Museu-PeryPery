@@ -2,6 +2,7 @@ import React from "react";
 import { Header } from "./Header";
 import logoLaranja from "../assets/logolaranja.png";
 import { Landmark, Palette, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Dashboard: React.FC = () => {
   return (
@@ -119,7 +120,7 @@ export const Dashboard: React.FC = () => {
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
             {/* Card 1 - História */}
-            <div className="museum-card group animate-fade-up delay-100">
+            <Link to="/historia" className="museum-card group animate-fade-up delay-100 cursor-pointer">
               <div className="relative">
                 {/* Icon Container */}
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
@@ -142,13 +143,13 @@ export const Dashboard: React.FC = () => {
               </p>
               
               {/* Learn More Link */}
-              <a href="#historia" className="inline-flex items-center gap-2 mt-6 text-museum-orange font-medium text-sm group/link">
+              <span className="inline-flex items-center gap-2 mt-6 text-museum-orange font-medium text-sm group/link">
                 <span>Saiba mais</span>
                 <svg className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </a>
-            </div>
+              </span>
+            </Link>
 
             {/* Card 2 - Cultura */}
             <div className="museum-card group animate-fade-up delay-200">
