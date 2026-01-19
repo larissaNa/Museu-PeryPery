@@ -1,4 +1,3 @@
-import React from "react";
 import { Landmark, BookOpen, Users, Calendar, Award, Heart, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { HistoriaHeader } from "@/components/HistoriaHeader";
