@@ -1,8 +1,12 @@
+import { useEffect } from "react";
 import { Landmark, BookOpen, Users, Calendar, Award, Heart, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { HistoriaHeader } from "@/components/HistoriaHeader";
 
 const Historia = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="min-h-screen bg-museum-dark">
       <HistoriaHeader />

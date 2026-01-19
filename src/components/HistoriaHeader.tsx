@@ -1,6 +1,7 @@
 import React from "react";
-import { Landmark, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import logoLaranja from "../assets/logolaranja.png";
 
 export const HistoriaHeader: React.FC = () => {
   return (
@@ -8,8 +9,12 @@ export const HistoriaHeader: React.FC = () => {
       <div className="museum-container">
         <div className="flex items-center justify-between h-16 sm:h-20">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-museum-orange to-museum-gold flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-              <Landmark className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+              <img 
+                src={logoLaranja} 
+                alt="Logo Museu Pery Pery" 
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="hidden sm:block">
               <h1 className="font-display text-lg font-semibold text-primary-foreground tracking-wide">
@@ -32,4 +37,3 @@ export const HistoriaHeader: React.FC = () => {
     </header>
   );
 };
-

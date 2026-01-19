@@ -1,11 +1,44 @@
+import { useEffect, useState } from "react";
 import { Landmark, Palette, Music, Theater, BookHeart, Brush, Camera } from "lucide-react";
-import { Link } from "react-router-dom";
 import { HistoriaHeader } from "@/components/HistoriaHeader";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const Cultura = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeCard, setActiveCard] = useState<string | null>(null);
+
+  const openModal = (title: string) => {
+    setActiveCard(title);
+    setIsModalOpen(true);
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="min-h-screen bg-museum-dark">
       <HistoriaHeader />
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-lg bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3 text-2xl font-display">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-museum-orange to-museum-gold flex items-center justify-center">
+                <Palette className="w-5 h-5 text-primary-foreground" />
+              </div>
+              {activeCard || "Detalhes da Cultura"}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Em breve adicionaremos conteúdo detalhado desta manifestação cultural.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <p className="text-sm text-muted-foreground">
+              Este é um modal padrão temporário. Em breve, esta seção será atualizada com informações específicas de cada card.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Hero Section */}
       <section className="museum-dark-section relative overflow-hidden pt-12 sm:pt-16 pb-16 sm:pb-20">
@@ -49,7 +82,11 @@ const Cultura = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
             {/* Card 1 - Música */}
-            <div className="museum-card group animate-fade-up delay-100">
+            <button
+              type="button"
+              onClick={() => openModal("Música Popular")}
+              className="museum-card group animate-fade-up delay-100 text-left w-full"
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                 <Music className="w-8 h-8 text-museum-orange" />
               </div>
@@ -60,10 +97,14 @@ const Cultura = () => {
                 Do forró ao baião, a música piripiriense ecoa tradições nordestinas 
                 que atravessam gerações e mantêm viva a alma do sertão.
               </p>
-            </div>
+            </button>
 
             {/* Card 2 - Teatro */}
-            <div className="museum-card group animate-fade-up delay-200">
+            <button
+              type="button"
+              onClick={() => openModal("Teatro & Drama")}
+              className="museum-card group animate-fade-up delay-200 text-left w-full"
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                 <Theater className="w-8 h-8 text-museum-orange" />
               </div>
@@ -74,10 +115,14 @@ const Cultura = () => {
                 Grupos teatrais locais preservam a arte cênica, contando histórias 
                 que refletem os costumes e o cotidiano do povo piauiense.
               </p>
-            </div>
+            </button>
 
             {/* Card 3 - Literatura */}
-            <div className="museum-card group animate-fade-up delay-300">
+            <button
+              type="button"
+              onClick={() => openModal("Literatura & Poesia")}
+              className="museum-card group animate-fade-up delay-300 text-left w-full"
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                 <BookHeart className="w-8 h-8 text-museum-orange" />
               </div>
@@ -88,10 +133,14 @@ const Cultura = () => {
                 Poetas e escritores locais eternizam em versos e prosa a beleza, 
                 as lutas e os sonhos do povo piripiriense.
               </p>
-            </div>
+            </button>
 
             {/* Card 4 - Artesanato */}
-            <div className="museum-card group animate-fade-up delay-100">
+            <button
+              type="button"
+              onClick={() => openModal("Artesanato")}
+              className="museum-card group animate-fade-up delay-100 text-left w-full"
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                 <Brush className="w-8 h-8 text-museum-orange" />
               </div>
@@ -102,10 +151,14 @@ const Cultura = () => {
                 Mãos habilidosas transformam matérias-primas regionais em peças 
                 únicas que carregam a identidade e criatividade local.
               </p>
-            </div>
+            </button>
 
             {/* Card 5 - Fotografia */}
-            <div className="museum-card group animate-fade-up delay-200">
+            <button
+              type="button"
+              onClick={() => openModal("Fotografia Histórica")}
+              className="museum-card group animate-fade-up delay-200 text-left w-full"
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                 <Camera className="w-8 h-8 text-museum-orange" />
               </div>
@@ -116,10 +169,14 @@ const Cultura = () => {
                 Registros fotográficos que documentam a evolução da cidade e 
                 preservam momentos importantes da história local.
               </p>
-            </div>
+            </button>
 
             {/* Card 6 - Festas */}
-            <div className="museum-card group animate-fade-up delay-300">
+            <button
+              type="button"
+              onClick={() => openModal("Festas Tradicionais")}
+              className="museum-card group animate-fade-up delay-300 text-left w-full"
+            >
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                 <Palette className="w-8 h-8 text-museum-orange" />
               </div>
@@ -130,7 +187,7 @@ const Cultura = () => {
                 Festividades religiosas e populares que reúnem a comunidade 
                 em celebrações que fortalecem os laços culturais.
               </p>
-            </div>
+            </button>
           </div>
         </div>
       </section>

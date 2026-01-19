@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Header } from "./Header";
 import logoLaranja from "../assets/logolaranja.png";
-import { Landmark, Palette, MapPin, Clock, Calendar, Phone } from "lucide-react";
+import { Landmark, Palette, MapPin, Clock, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
@@ -242,16 +242,6 @@ export const Dashboard: React.FC = () => {
               <div>
                 <p className="font-medium text-card-foreground mb-1">Agendamento</p>
                 <p className="text-sm text-muted-foreground">Visitas em grupo devem ser agendadas com antecedência</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-museum-orange/20 to-museum-gold/20 flex items-center justify-center shrink-0">
-                <Phone className="w-5 h-5 text-museum-orange" />
-              </div>
-              <div>
-                <p className="font-medium text-card-foreground mb-1">Contato para Agendamento</p>
-                <p className="text-sm text-muted-foreground">(00) 0000-0000</p>
-                <p className="text-sm text-muted-foreground">contato@museuperypery.com.br</p>
               </div>
             </div>
             <div className="pt-4 border-t border-border">
