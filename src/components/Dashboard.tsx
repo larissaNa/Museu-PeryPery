@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Header } from "./Header";
 import logoLaranja from "../assets/logolaranja.png";
-import { Landmark, Palette, MapPin } from "lucide-react";
+import { Landmark, Palette, MapPin, Clock, Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export const Dashboard: React.FC = () => {
+  const [isVisitasOpen, setIsVisitasOpen] = useState(false);
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -119,7 +122,7 @@ export const Dashboard: React.FC = () => {
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
             {/* Card 1 - História */}
-            <div className="museum-card group animate-fade-up delay-100">
+            <Link to="/historia" className="museum-card group animate-fade-up delay-100 cursor-pointer">
               <div className="relative">
                 {/* Icon Container */}
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
@@ -142,16 +145,16 @@ export const Dashboard: React.FC = () => {
               </p>
               
               {/* Learn More Link */}
-              <a href="#historia" className="inline-flex items-center gap-2 mt-6 text-museum-orange font-medium text-sm group/link">
+              <span className="inline-flex items-center gap-2 mt-6 text-museum-orange font-medium text-sm group/link">
                 <span>Saiba mais</span>
                 <svg className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </a>
-            </div>
+              </span>
+            </Link>
 
             {/* Card 2 - Cultura */}
-            <div className="museum-card group animate-fade-up delay-200">
+            <Link to="/cultura" className="museum-card group animate-fade-up delay-200 cursor-pointer">
               <div className="relative">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                   <Palette className="w-8 h-8 text-museum-orange" />
@@ -170,46 +173,83 @@ export const Dashboard: React.FC = () => {
                 Explore a importância cultural do espaço e descubra como ele contribui para
                 a valorização da identidade local.
               </p>
-              
-              <a href="#cultura" className="inline-flex items-center gap-2 mt-6 text-museum-orange font-medium text-sm group/link">
+              <span className="inline-flex items-center gap-2 mt-6 text-museum-orange font-medium text-sm group/link">
                 <span>Saiba mais</span>
                 <svg className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </a>
-            </div>
+              </span>
+            </Link>
 
             {/* Card 3 - Visitas */}
-            <div className="museum-card group animate-fade-up delay-300 md:col-span-2 lg:col-span-1">
+            <button
+              onClick={() => setIsVisitasOpen(true)}
+              className="museum-card group animate-fade-up delay-300 md:col-span-2 lg:col-span-1 cursor-pointer text-left w-full"
+            >
               <div className="relative">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-museum-orange/10 to-museum-gold/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                   <MapPin className="w-8 h-8 text-museum-orange" />
                 </div>
-                
-                <div className="absolute top-0 right-0 w-20 h-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute top-0 right-0 w-12 h-0.5 bg-gradient-to-l from-museum-orange-light to-transparent" />
-                  <div className="absolute top-0 right-0 w-0.5 h-12 bg-gradient-to-b from-museum-orange-light to-transparent" />
-                </div>
               </div>
-              
               <h3 className="text-xl sm:text-2xl font-display font-semibold mb-3 text-card-foreground group-hover:text-museum-orange transition-colors duration-300">
                 Visitas
               </h3>
               <p className="text-muted-foreground leading-relaxed">
-                Informações sobre visitas presenciais, horários de funcionamento e como
-                agendar sua visita ao museu.
+                Informações sobre visitas presenciais, horários de funcionamento e como agendar sua visita ao museu.
               </p>
-              
-              <a href="#visitas" className="inline-flex items-center gap-2 mt-6 text-museum-orange font-medium text-sm group/link">
-                <span>Saiba mais</span>
-                <svg className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-            </div>
+            </button>
           </div>
         </div>
       </section>
+
+      <Dialog open={isVisitasOpen} onOpenChange={setIsVisitasOpen}>
+        <DialogContent className="sm:max-w-lg bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3 text-2xl font-display">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-museum-orange to-museum-gold flex items-center justify-center">
+                <MapPin className="w-5 h-5 text-primary-foreground" />
+              </div>
+              Informações de Visita
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">Planeje sua visita ao Museu Pery Pery</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-museum-orange/20 to-museum-gold/20 flex items-center justify-center shrink-0">
+                <Clock className="w-5 h-5 text-museum-orange" />
+              </div>
+              <div>
+                <p className="font-medium text-card-foreground mb-1">Horário de Funcionamento</p>
+                <p className="text-sm text-muted-foreground">Segunda a Sexta: 08h às 17h</p>
+                <p className="text-sm text-muted-foreground">Sábado: 08h às 12h</p>
+                <p className="text-sm text-muted-foreground">Domingo: Fechado</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-museum-orange/20 to-museum-gold/20 flex items-center justify-center shrink-0">
+                <MapPin className="w-5 h-5 text-museum-orange" />
+              </div>
+              <div>
+                <p className="font-medium text-card-foreground mb-1">Localização</p>
+                <p className="text-sm text-muted-foreground">Centro de Piripiri, Piauí</p>
+                <p className="text-sm text-muted-foreground">CEP: 64260-000</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-museum-orange/20 to-museum-gold/20 flex items-center justify-center shrink-0">
+                <Calendar className="w-5 h-5 text-museum-orange" />
+              </div>
+              <div>
+                <p className="font-medium text-card-foreground mb-1">Agendamento</p>
+                <p className="text-sm text-muted-foreground">Visitas em grupo devem ser agendadas com antecedência</p>
+              </div>
+            </div>
+            <div className="pt-4 border-t border-border">
+              <p className="text-sm text-center text-muted-foreground">Entrada gratuita • Visitas guiadas disponíveis</p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Seção Contato */}
       <section id="contato" className="museum-light-section museum-section">

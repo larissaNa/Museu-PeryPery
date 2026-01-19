@@ -8,6 +8,8 @@ import Dashboard from "./pages/Dashboard";
 import { Auth } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { PublicRoute } from "./routes/PublicRoute";
+import Historia from "./pages/Historia";
+import Cultura from "./pages/Culture";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
                 </PublicRoute>
               } 
             />
+            <Route path="/historia" element={<Historia />} />
+            <Route path="/cultura" element={<Cultura />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
