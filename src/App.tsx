@@ -10,6 +10,8 @@ import NotFound from "./pages/NotFound";
 import { PublicRoute } from "./routes/PublicRoute";
 import Historia from "./pages/Historia";
 import Cultura from "./pages/Culture";
+import Admin from "./pages/Admin";
+import { AdminRoute } from "./routes/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +34,14 @@ const App = () => (
             />
             <Route path="/historia" element={<Historia />} />
             <Route path="/cultura" element={<Cultura />} />
+            <Route 
+              path="/admin" 
+              element={
+                <AdminRoute>
+                  <Admin />
+                </AdminRoute>
+              } 
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -4,9 +4,11 @@ import logoLaranja from "../assets/logolaranja.png";
 import { Landmark, Palette, MapPin, Clock, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useAuthContext } from "@/context/AuthContext";
 
 export const Dashboard: React.FC = () => {
   const [isVisitasOpen, setIsVisitasOpen] = useState(false);
+  const { user } = useAuthContext();
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -198,6 +200,8 @@ export const Dashboard: React.FC = () => {
                 Informações sobre visitas presenciais, horários de funcionamento e como agendar sua visita ao museu.
               </p>
             </button>
+            
+            
           </div>
         </div>
       </section>

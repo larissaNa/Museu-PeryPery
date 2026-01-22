@@ -11,6 +11,7 @@ export class AuthService {
       email: supabaseUser.email || null,
       displayName: supabaseUser.user_metadata?.display_name || supabaseUser.user_metadata?.full_name || null,
       photoURL: supabaseUser.user_metadata?.avatar_url || supabaseUser.user_metadata?.picture || null,
+      role: (supabaseUser.user_metadata as any)?.role || (supabaseUser.app_metadata as any)?.role || null,
     };
   }
 

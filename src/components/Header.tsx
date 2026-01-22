@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logoLaranja from "../assets/logolaranja.png";
 
 export const Header: React.FC = () => {
@@ -50,6 +50,15 @@ export const Header: React.FC = () => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-museum-orange to-museum-gold transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
+            {user?.role === "admin" && (
+              <Link
+                to="/admin"
+                className="relative text-sm font-medium text-museum-warm-gray hover:text-primary-foreground transition-colors duration-300 group"
+              >
+                Admin
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-museum-orange to-museum-gold transition-all duration-300 group-hover:w-full" />
+              </Link>
+            )}
           </nav>
 
           {/* User Info and Actions */}
