@@ -6,11 +6,42 @@ import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useAuthContext } from "@/context/AuthContext";
 
+import { ContributionForm } from "@/components/ContributionForm";
+
+
 export const Dashboard: React.FC = () => {
   const [isVisitasOpen, setIsVisitasOpen] = useState(false);
-  const { user } = useAuthContext();
+
+  // Estado para armazenar o user_id logado
+  const [userId, setUserId] = useState<string | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
+  // Obtém o usuário logado via supabase.auth.getUser()
+  React.useEffect(() => {
+    let mounted = true;
+    setLoadingUser(true);
+    import("@/infra/supabaseClient").then(({ supabase }) => {
+      supabase.auth.getUser().then((result) => {
+        if (!mounted) return;
+        if (result.data?.user?.id) {
+          setUserId(result.data.user.id);
+          console.log("[DEBUG] user_id logado:", result.data.user.id);
+        } else {
+          setUserId(null);
+          console.log("[DEBUG] usuário não autenticado");
+        }
+        setLoadingUser(false);
+      });
+    });
+    return () => { mounted = false; };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Exibe user_id logado ou mensagem de não autenticado no topo */}
+      <div style={{ fontSize: "0.85rem", color: "#888", padding: "8px 0", textAlign: "center" }}>
+        {loadingUser ? "Carregando usuário..." : userId ? `user_id logado: ${userId}` : "usuário não autenticado"}
+      </div>
       <Header />
 
       {/* Seção Matterport - Museu Virtual */}
@@ -311,6 +342,7 @@ export const Dashboard: React.FC = () => {
       </section>
 
 
+
       {/* Contribuição */}
       <section id="contato" className="museum-light-section museum-section">
         <div className="museum-container">
@@ -326,10 +358,9 @@ export const Dashboard: React.FC = () => {
             </div>
             <div className="museum-card animate-fade-up delay-100">
               <div className="space-y-6">
-                <div className="flex items-start gap-4 p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors duration-300">
-                  image
+                <div className="p-4">
+                  <ContributionForm />
                 </div>
-
                 {/* Message */}
                 <div className="pt-4 border-t border-border">
                   <p className="text-center text-muted-foreground">
@@ -341,6 +372,8 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
       </section>
+
+
 
       {/* Footer */}
       <footer className="museum-dark-section py-10 sm:py-12 border-t border-museum-dark-soft">

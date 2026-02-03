@@ -1,5 +1,7 @@
+
 import React from "react";
 import { HistoriaHeader } from "@/components/HistoriaHeader";
+import { ModerationPanel } from "@/components/ModerationPanel";
 
 const Admin: React.FC = () => {
   return (
@@ -15,10 +17,8 @@ const Admin: React.FC = () => {
               Conteúdo reservado a usuários com permissão de administrador.
             </p>
           </div>
-          <div className="museum-card text-center">
-            <p className="text-muted-foreground">
-              Em breve adicionaremos funcionalidades administrativas.
-            </p>
+          <div className="museum-card">
+            <ModerationPanel />
           </div>
         </div>
       </section>

@@ -40,16 +40,30 @@ export const Header: React.FC = () => {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            {["Início", "Museu Virtual", "Sobre", "Contato", "Galeria"].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase().replace(" ", "-")}`}
-                className="relative text-sm font-medium text-museum-warm-gray hover:text-primary-foreground transition-colors duration-300 group"
-              >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-museum-orange to-museum-gold transition-all duration-300 group-hover:w-full" />
-              </a>
-            ))}
+            {["Início", "Museu Virtual", "Sobre", "Contato", "Galeria"].map((item) => {
+              if (item === "Galeria") {
+                return (
+                  <Link
+                    key={item}
+                    to="/galeria"
+                    className="relative text-sm font-medium text-museum-warm-gray hover:text-primary-foreground transition-colors duration-300 group"
+                  >
+                    {item}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-museum-orange to-museum-gold transition-all duration-300 group-hover:w-full" />
+                  </Link>
+                );
+              }
+              return (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase().replace(" ", "-")}`}
+                  className="relative text-sm font-medium text-museum-warm-gray hover:text-primary-foreground transition-colors duration-300 group"
+                >
+                  {item}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-museum-orange to-museum-gold transition-all duration-300 group-hover:w-full" />
+                </a>
+              );
+            })}
             {user?.role === "admin" && (
               <Link
                 to="/admin"
