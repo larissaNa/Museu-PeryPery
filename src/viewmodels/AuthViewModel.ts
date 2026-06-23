@@ -3,6 +3,8 @@ import { AuthService } from '../models/services/AuthService';
 import { AuthRepository } from '../models/repositories/AuthRepository';
 import type { User } from '../models/entities/User';
 
+import { supabase } from '../infra/supabaseClient';
+
 export const useAuthViewModel = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,8 +34,14 @@ export const useAuthViewModel = () => {
     setLoading(true);
     try {
       const u = await authService.signUp(email, password, displayName);
-      setUser(u);
-      return u;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setUser(u);
+        return { user: u, sessionCreated: true };
+      } else {
+        setUser(null);
+        return { user: u, sessionCreated: false };
+      }
     } finally {
       setLoading(false);
     }

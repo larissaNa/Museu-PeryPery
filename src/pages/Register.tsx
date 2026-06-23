@@ -18,6 +18,7 @@ export const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -30,7 +31,14 @@ export const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
     setError("");
 
     try {
-      await signUp(email, password, name);
+      const result = await signUp(email, password, name);
+      if (result && !result.sessionCreated) {
+        setSuccess(true);
+        toast({
+          title: "Cadastro realizado com sucesso!",
+          description: "Um e-mail de confirmação foi enviado para " + email + ".",
+        });
+      }
     } catch (err: any) {
       const errorMessage = err.message || "Erro ao cadastrar usuário";
       setError(errorMessage);
@@ -78,63 +86,90 @@ export const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
 
         {/* Right Form */}
         <div className="md:w-1/2 flex flex-col justify-center px-10 py-12 bg-transparent">
-          <h2 className="text-center font-display text-xl font-semibold text-white/90 mb-8">
-            Crie sua Conta
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-              <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg py-2.5 px-4 text-center">
-                {error}
+          {success ? (
+            <div className="text-center space-y-6 animate-fade-in">
+              <div className="w-20 h-20 mx-auto rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 shadow-lg shadow-green-500/5">
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l8-4.62a2 2 0 012.22 0l8 4.62A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-2.25-1.5a2 2 0 00-2.22 0l-2.25 1.5" />
+                </svg>
               </div>
-            )}
-            <div className="space-y-1.5">
-              <input
-                type="text"
-                placeholder="Nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full bg-museum-dark/50 text-white placeholder:text-zinc-500 border border-white/5 focus:border-museum-orange/50 focus:ring-1 focus:ring-museum-orange/50 px-4 py-3 rounded-xl outline-none transition-all duration-300 text-sm"
-                required
-              />
+              <h2 className="font-display text-2xl font-bold text-white">Confirme seu E-mail</h2>
+              <div className="space-y-3 text-sm text-museum-warm-gray leading-relaxed">
+                <p>
+                  Enviamos um link de confirmação para o endereço <strong className="text-white">{email}</strong>.
+                </p>
+                <p>
+                  Por favor, verifique sua caixa de entrada (e pasta de spam) e clique no link para ativar sua conta antes de tentar fazer login.
+                </p>
+              </div>
+              <button
+                onClick={onToggleMode}
+                className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-museum-orange to-museum-gold text-white font-semibold hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-museum-orange/15 mt-4"
+              >
+                IR PARA O LOGIN
+              </button>
             </div>
-            <div className="space-y-1.5">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-museum-dark/50 text-white placeholder:text-zinc-500 border border-white/5 focus:border-museum-orange/50 focus:ring-1 focus:ring-museum-orange/50 px-4 py-3 rounded-xl outline-none transition-all duration-300 text-sm"
-                required
-              />
-            </div>
-            <div className="space-y-1.5">
-              <input
-                type="password"
-                placeholder="Senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-museum-dark/50 text-white placeholder:text-zinc-500 border border-white/5 focus:border-museum-orange/50 focus:ring-1 focus:ring-museum-orange/50 px-4 py-3 rounded-xl outline-none transition-all duration-300 text-sm"
-                minLength={6}
-                required
-              />
-            </div>
-            <button
-              disabled={loading}
-              type="submit"
-              className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-museum-orange to-museum-gold text-white font-semibold hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-museum-orange/15 disabled:opacity-60 disabled:pointer-events-none mt-2"
-            >
-              {loading ? "Cadastrando..." : "CADASTRAR"}
-            </button>
-          </form>
-          <div className="mt-6 flex justify-center">
-            <Link 
-              to="/" 
-              className="text-xs text-museum-warm-gray hover:text-museum-orange transition-colors flex items-center gap-1.5 font-medium"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Voltar para a Página Inicial</span>
-            </Link>
-          </div>
+          ) : (
+            <>
+              <h2 className="text-center font-display text-xl font-semibold text-white/90 mb-8">
+                Crie sua Conta
+              </h2>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {error && (
+                  <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg py-2.5 px-4 text-center">
+                    {error}
+                  </div>
+                )}
+                <div className="space-y-1.5">
+                  <input
+                    type="text"
+                    placeholder="Nome"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-museum-dark/50 text-white placeholder:text-zinc-500 border border-white/5 focus:border-museum-orange/50 focus:ring-1 focus:ring-museum-orange/50 px-4 py-3 rounded-xl outline-none transition-all duration-300 text-sm"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-museum-dark/50 text-white placeholder:text-zinc-500 border border-white/5 focus:border-museum-orange/50 focus:ring-1 focus:ring-museum-orange/50 px-4 py-3 rounded-xl outline-none transition-all duration-300 text-sm"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <input
+                    type="password"
+                    placeholder="Senha"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-museum-dark/50 text-white placeholder:text-zinc-500 border border-white/5 focus:border-museum-orange/50 focus:ring-1 focus:ring-museum-orange/50 px-4 py-3 rounded-xl outline-none transition-all duration-300 text-sm"
+                    minLength={6}
+                    required
+                  />
+                </div>
+                <button
+                  disabled={loading}
+                  type="submit"
+                  className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-museum-orange to-museum-gold text-white font-semibold hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-museum-orange/15 mt-2"
+                >
+                  {loading ? "Cadastrando..." : "CADASTRAR"}
+                </button>
+              </form>
+              <div className="mt-6 flex justify-center">
+                <Link 
+                  to="/" 
+                  className="text-xs text-museum-warm-gray hover:text-museum-orange transition-colors flex items-center gap-1.5 font-medium"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Voltar para a Página Inicial</span>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
